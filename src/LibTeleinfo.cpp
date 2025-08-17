@@ -448,7 +448,13 @@ Input   : Pointer to the label name
           pointer to the value where we fill data 
 Output  : pointer to the value where we filled data NULL is not found
 ====================================================================== */
-char * TInfo::valueGet(char * name, char * value)
+String TInfo::valueGet(String name)
+{
+  char *Cname = const_cast<char*>(name.c_str());
+  return String(TInfo::valueGet(Cname));
+}
+
+char * TInfo::valueGet(char * name)
 {
   // Get our linked list 
   ValueList * me = &_valueslist;
@@ -469,10 +475,8 @@ char * TInfo::valueGet(char * name, char * value)
         if (me->value) {
           // Check back checksum
           if (me->checksum == calcChecksum(me->name, me->value)) {
-            // copy to dest buffer
-            uint8_t lgvalue = strlen(me->value);
-            strncpy(value, me->value , lgvalue + 1 );
-            return ( value );
+            // return value
+            return ( me->value );
           }
         }
       }
